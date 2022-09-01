@@ -6,12 +6,18 @@ import { useEffect, useState } from "react";
 export default function UploadPage() {
   //useState for weather in main bar
   const [temp, setTemp] = useState("");
-  const [background, setBackground] = useState(); //hardcoded picture of the sun from database
+  const [background, setBackground] = useState(
+    `http://localhost:8080/images/sun.jpg`
+  ); //hardcoded picture of the sun from database
   const [mocktail, setMocktails] = useState("");
 
   //variables for key and url, can store this in another place in the future
   const urlWeather = `https://api.weatherbit.io/v2.0/current?lat=49.2850&lon=-123.1147`;
-  const apiKey = `&key=e840589dcb26493795dcd26a7469f83b&include=minutely`;
+  const apiKey = `&key=960a3e9c92ed4f7bb9cedd0bd9a99c03`;
+  const apiK = `01f041aa5c5772c110be5f9ac7132843`;
+  const lat = `49.2850`;
+  const lon = `-123.1147`;
+  const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiK}`;
 
   /*
    *************************************************************************
@@ -25,6 +31,7 @@ export default function UploadPage() {
       .get(`${urlWeather}${apiKey}`)
       .then((response) => {
         const app_temp = response.data.data[0].app_temp;
+        // const app_temp = Math.round(app_tempK - 273.15);
         setTemp(app_temp);
       })
       .catch((err) => console.log(err));
@@ -33,17 +40,41 @@ export default function UploadPage() {
   //default background it the sun picture
   //get precip
   //if precep is >=1 than rain picture
-  const getPrecip = () => {
+  const getBackground = () => {
     axios
       .get(`${urlWeather}${apiKey}`)
       .then((response) => {
-        console.log(response.data.data[0].precip);
+        console.log(response.data.data[0]);
         const precip = response.data.data[0].precip;
+        const snow = response.data.data[0].snow;
+        const cloud = response.data.data[0].clouds;
+        const fog = response.data.data[0].fog;
         if (precip >= "1") {
           axios
-            .get(`http://localhost:8080`)
+            .get(`http://localhost:8080/images/rain.jpg`)
             .then((response) => {
               setBackground(response.data); //set to picture of rain
+            })
+            .catch((err) => console.log(err));
+        } else if (snow >= "1") {
+          axios
+            .get(`http://localhost:8080/images/snow.jpg`)
+            .then((response) => {
+              setBackground(response.data); //set to picture of snow
+            })
+            .catch((err) => console.log(err));
+        } else if (cloud >= "1") {
+          axios
+            .get(`http://localhost:8080/images/cloud.jpg`)
+            .then((response) => {
+              setBackground(response.data); //set to picture of cloud
+            })
+            .catch((err) => console.log(err));
+        } else if (fog >= "35") {
+          axios
+            .get(`http://localhost:8080/images/fog.jpg`)
+            .then((response) => {
+              setBackground(response.data);
             })
             .catch((err) => console.log(err));
         }
@@ -53,44 +84,60 @@ export default function UploadPage() {
 
   //get snow
   //if snow is >=1 than snow picture
-  const getSnow = () => {
-    axios
-      .get(`${urlWeather}${apiKey}`)
-      .then((response) => {
-        console.log(response.data.data[0].snow);
-        const snow = response.data.data[0].snow;
-        if (snow >= "1") {
-          axios
-            .get(`http://localhost:8080`)
-            .then((response) => {
-              setBackground(response.data); //set to picture of snow
-            })
-            .catch((err) => console.log(err));
-        }
-      })
-      .catch((err) => console.log(err));
-  };
+  // const getSnow = () => {
+  //   axios
+  //     .get(`${urlWeather}${apiKey}`)
+  //     .then((response) => {
+  //       const snow = response.data.data[0].snow;
+  //       if (snow >= "1") {
+  //         axios
+  //           .get(`http://localhost:8080/images/snow.jpg`)
+  //           .then((response) => {
+  //             setBackground(response.data); //set to picture of snow
+  //           })
+  //           .catch((err) => console.log(err));
+  //       }
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
 
-  //get sun
   //get cloud
   //if clouds are >50 than picture is cloudy
-  const getCloud = () => {
-    axios
-      .get(`${urlWeather}${apiKey}`)
-      .then((response) => {
-        console.log(response.data.data[0].clouds);
-        const cloud = response.data.data[0].clouds;
-        if (cloud >= "1") {
-          axios
-            .get(`http://localhost:8080/`)
-            .then((response) => {
-              setBackground(response.data); //set to picture of cloud
-            })
-            .catch((err) => console.log(err));
-        }
-      })
-      .catch((err) => console.log(err));
-  };
+  // const getCloud = () => {
+  //   axios
+  //     .get(`${urlWeather}${apiKey}`)
+  //     .then((response) => {
+  //       const cloud = response.data.data[0].clouds;
+  //       if (cloud >= "1") {
+  //         axios
+  //           .get(`http://localhost:8080/images/cloud.jpg`)
+  //           .then((response) => {
+  //             setBackground(response.data); //set to picture of cloud
+  //           })
+  //           .catch((err) => console.log(err));
+  //       }
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
+
+  //get fog
+  //if fog are >35 than picture is cloudy
+  // const getFog = () => {
+  //   axios
+  //     .get(`${urlWeather}${apiKey}`)
+  //     .then((response) => {
+  //       const fog = response.data.data[0].fog;
+  //       if (fog >= "35") {
+  //         axios
+  //           .get(`http://localhost:8080/images/fog.jpg`)
+  //           .then((response) => {
+  //             setBackground(response.data);
+  //           })
+  //           .catch((err) => console.log(err));
+  //       }
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
 
   //get mocktails
   const getMocktails = () => {
@@ -111,9 +158,7 @@ export default function UploadPage() {
   //work on getting mocktail data once server is running
 
   useEffect(() => {
-    getPrecip();
-    getCloud();
-    getSnow();
+    getBackground();
     getTemp();
     getMocktails();
   }, []);
@@ -124,7 +169,16 @@ export default function UploadPage() {
    */
 
   return (
-    <div className="pokemon">
+    <div
+      className="pokemon"
+      style={{
+        backgroundImage: `url(${background})`,
+        height: "100",
+        width: "100",
+        backgroundSize: "cover",
+        backgroundRepeat: "none",
+      }}
+    >
       <div className="pokemon__weather">
         <div className="pokemon__weather-wrapper">
           <p className="pokemon__weather-info">{temp}ºC</p>
