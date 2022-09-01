@@ -56,6 +56,8 @@ export default function UploadPage() {
               setBackground(response.data); //set to picture of rain
             })
             .catch((err) => console.log(err));
+    }, []);
+
         } else if (snow >= "1") {
           axios
             .get(`http://localhost:8080/images/snow.jpg`)
@@ -168,6 +170,60 @@ export default function UploadPage() {
    *Kayle's changes
    */
 
+
+
+    //--------------------------Kevin Part------------------------------------
+
+    const [pokemonData, setPokemonData] = useState(null);
+
+    const [pokemonDetail, setPokemonDetail] = useState(null);
+    const [list, setList] = useState([]);
+    const weather = "sunny";
+
+    const findPokemonWithName = (pokemonName) => {
+        axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`).then(response => {
+
+            const pokemon = {
+                name: pokemonName,
+                url: response.data.sprites.front_default
+            }
+
+            setList((prev) => [...prev, pokemon])
+
+        }).catch(error => {
+            console.error(`Couldn't get a response from the API: ${error}`);
+        });
+    }
+
+    const getType = (type) => {
+        axios.get("https://pokeapi.co/api/v2/type/")
+            .then((response) => {
+
+                let type = response.data.results.find((e) => e.name === type);
+                console.log(type.url);
+                axios.get(`${type.url}`)
+                    .then((response) => {
+                        console.log(response.data);
+                    });
+
+            });
+    }
+
+    useEffect(() => {
+        axios.get('https://pokeapi.co/api/v2/pokemon/?limit=200').then(response => {
+            setPokemonData(response.data.results);
+
+            response.data.results.forEach(element => {
+                findPokemonWithName(element.name)
+
+            });
+
+
+        }).catch(err => {
+            console.error(err);
+        });
+    }, []);
+
   return (
     <div
       className="pokemon"
@@ -191,27 +247,33 @@ export default function UploadPage() {
       <div className="pokemon__mocktail">
         <div className="pokemon__mocktail-wrapper">
           <p className="pokemon__mocktail-info">{mocktail}</p>
+
         </div>
       </div>
 
-      <div className="pokemin__image">
-        <div class="marquee">
-          <div class="marquee-content">
-            <div class="marquee-item">
-              <img
-                src="https://via.placeholder.com/600/000000/FFFFFF/?text=01"
-                alt=""
-              />
-            </div>
-            <div class="marquee-item">
-              <img
-                src="https://via.placeholder.com/600/000000/FFFFFF/?text=01"
-                alt=""
-              />
-            </div>
+       <div className='pokemon__image'>
+          <div className="marquee">
+              <div className="marquee-content">
+                  {list && shuffleArray(list).map((e, i) => {
+                      return (
+                          <div key={i} className="marquee-item">
+                              <img src={e.url} alt="pokemon image" />
+                          </div>)
+                  })}
+
+              </div>
           </div>
-        </div>
       </div>
-    </div>
   );
 }
+
+function shuffleArray(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+    return array;
+}
+
