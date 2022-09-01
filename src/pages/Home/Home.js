@@ -7,6 +7,7 @@ export default function UploadPage() {
   //useState for weather in main bar
   const [temp, setTemp] = useState("");
   const [background, setBackground] = useState(); //hardcoded picture of the sun from database
+  const [mocktail, setMocktails] = useState("");
 
   //variables for key and url, can store this in another place in the future
   const urlWeather = `https://api.weatherbit.io/v2.0/current?lat=49.2850&lon=-123.1147`;
@@ -81,11 +82,27 @@ export default function UploadPage() {
         const cloud = response.data.data[0].clouds;
         if (cloud >= "1") {
           axios
-            .get(`http://localhost:8080`)
+            .get(`http://localhost:8080/`)
             .then((response) => {
               setBackground(response.data); //set to picture of cloud
             })
             .catch((err) => console.log(err));
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
+  //get mocktails
+  const getMocktails = () => {
+    axios
+      .get(`http://localhost:8080/Mocktails`)
+      .then((response) => {
+        if (temp < "5") {
+          setMocktails(response.data.weather.cold); //set to picture of cloud
+        } else if (temp < "15") {
+          setMocktails(response.data.weather.warm); //set to picture of cloud
+        } else {
+          setMocktails(response.data.weather.hot); //set to picture of cloud
         }
       })
       .catch((err) => console.log(err));
@@ -98,6 +115,7 @@ export default function UploadPage() {
     getCloud();
     getSnow();
     getTemp();
+    getMocktails();
   }, []);
 
   /*
@@ -118,7 +136,7 @@ export default function UploadPage() {
       </p>
       <div className="pokemon__mocktail">
         <div className="pokemon__mocktail-wrapper">
-          <p className="pokemon__mocktail-info">Data</p>
+          <p className="pokemon__mocktail-info">{mocktail}</p>
         </div>
       </div>
 
