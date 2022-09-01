@@ -1,0 +1,22 @@
+.pokemon {
+    padding: 3rem 3rem;
+}
+
+.pokemon__weather {
+    &-wrapper {
+        background-color: gray;
+        width: 150px;
+        height: 150px;
+        border-radius: 10px;
+        margin: auto;
+        position: relative;
+    }
+
+    &-info {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+}
