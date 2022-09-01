@@ -12,14 +12,14 @@ export default function UploadPage() {
   const apiKey = `&key=e840589dcb26493795dcd26a7469f83b&include=minutely`;
 
   //get the list for the videos
-  //useEffect(() => {
-  axios
-    .get(`${urlWeather}${apiKey}`)
-    .then((response) => {
-      const weather = response.data.data[0].app_temp;
-    })
-    .catch((err) => console.log(err));
-  //}, []);
+  useEffect(() => {
+    axios
+      .get(`${urlWeather}${apiKey}`)
+      .then((response) => {
+        console.log(response.data.data[0].app_temp);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   let nav = useNavigate();
   const Navigate = (event) => {
@@ -40,6 +40,8 @@ export default function UploadPage() {
       })
       .catch((err) => console.log(err));
   };
+
+  //---------------------------------------------------
 
   return (
     <div className="pokemon">
