@@ -34,14 +34,24 @@ export default function UploadPage() {
             <p className='content'>It is ______(fill in with  warm, hot, or cold).  A great mocktail
                 to share today with your pokemon is....
             </p>
-            <div className='pokemin__mocktail'>
-                <div className='pokemin__mocktail-wrapper'>
-                    <p>Data</p>
+            <div className='pokemon__mocktail'>
+                <div className='pokemon__mocktail-wrapper'>
+                    <p className='pokemon__mocktail-info'>Data</p>
                 </div>
             </div>
 
             <div className='pokemin__image'>
+                <div class="marquee">
+                    <div class="marquee-content">
+                        <div class="marquee-item">
+                            <img src="https://via.placeholder.com/600/000000/FFFFFF/?text=01" alt="" />
+                        </div>
+                        <div class="marquee-item">
+                            <img src="https://via.placeholder.com/600/000000/FFFFFF/?text=01" alt="" />
+                        </div>
 
+                    </div>
+                </div>
             </div>
 
         </div>
