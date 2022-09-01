@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Home.scss";
-// import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 export default function UploadPage() {
   //useState for weather in main bar
@@ -47,7 +47,7 @@ export default function UploadPage() {
     <div className="pokemon">
       <div className="pokemon__weather">
         <div className="pokemon__weather-wrapper">
-          <p className="pokemon__weather-info">{weather}</p>
+          <p className="pokemon__weather-info">Data</p>
         </div>
       </div>
       <p className="content">
