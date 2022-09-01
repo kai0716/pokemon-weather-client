@@ -10,13 +10,15 @@ export default function UploadPage() {
     `http://localhost:8080/images/sun.jpg`
   ); //hardcoded picture of the sun from database
   const [mocktail, setMocktails] = useState("");
+  const [mocktailIng, setMocktailsIng] = useState("");
 
   //variables for key and url, can store this in another place in the future
   const urlWeather = `https://api.weatherbit.io/v2.0/current?lat=49.2850&lon=-123.1147`;
+  // const urlWeather = `https://api.weatherbit.io/v2.0/current?lat=60.7197&lon=-135.0523`;
   const apiKey = `&key=960a3e9c92ed4f7bb9cedd0bd9a99c03`;
   const apiK = `01f041aa5c5772c110be5f9ac7132843`;
-  const lat = `49.2850`;
-  const lon = `-123.1147`;
+  const lat = `60.7197`;
+  const lon = `-135.0523`;
   const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiK}`;
 
   /*
@@ -48,35 +50,34 @@ export default function UploadPage() {
         const precip = response.data.data[0].precip;
         const snow = response.data.data[0].snow;
         const cloud = response.data.data[0].clouds;
+        console.log(response.data.data[0].clouds);
         const fog = response.data.data[0].fog;
         if (precip >= "1") {
           axios
             .get(`http://localhost:8080/images/rain.jpg`)
             .then((response) => {
-              setBackground(response.data); //set to picture of rain
+              setBackground(`http://localhost:8080/images/rain.jpg`); //set to picture of rain
             })
             .catch((err) => console.log(err));
-    }, []);
-
         } else if (snow >= "1") {
           axios
             .get(`http://localhost:8080/images/snow.jpg`)
             .then((response) => {
-              setBackground(response.data); //set to picture of snow
+              setBackground(`http://localhost:8080/images/snow.jpg`); //set to picture of snow
             })
             .catch((err) => console.log(err));
-        } else if (cloud >= "1") {
+        } else if (cloud >= 1) {
           axios
-            .get(`http://localhost:8080/images/cloud.jpg`)
+            .get(`http://localhost:8080/images/clouds.jpg`)
             .then((response) => {
-              setBackground(response.data); //set to picture of cloud
+              setBackground(`http://localhost:8080/images/clouds.jpg`); //set to picture of cloud
             })
             .catch((err) => console.log(err));
         } else if (fog >= "35") {
           axios
             .get(`http://localhost:8080/images/fog.jpg`)
             .then((response) => {
-              setBackground(response.data);
+              setBackground(`http://localhost:8080/images/fog.jpg`);
             })
             .catch((err) => console.log(err));
         }
@@ -84,75 +85,24 @@ export default function UploadPage() {
       .catch((err) => console.log(err));
   };
 
-  //get snow
-  //if snow is >=1 than snow picture
-  // const getSnow = () => {
-  //   axios
-  //     .get(`${urlWeather}${apiKey}`)
-  //     .then((response) => {
-  //       const snow = response.data.data[0].snow;
-  //       if (snow >= "1") {
-  //         axios
-  //           .get(`http://localhost:8080/images/snow.jpg`)
-  //           .then((response) => {
-  //             setBackground(response.data); //set to picture of snow
-  //           })
-  //           .catch((err) => console.log(err));
-  //       }
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
-
-  //get cloud
-  //if clouds are >50 than picture is cloudy
-  // const getCloud = () => {
-  //   axios
-  //     .get(`${urlWeather}${apiKey}`)
-  //     .then((response) => {
-  //       const cloud = response.data.data[0].clouds;
-  //       if (cloud >= "1") {
-  //         axios
-  //           .get(`http://localhost:8080/images/cloud.jpg`)
-  //           .then((response) => {
-  //             setBackground(response.data); //set to picture of cloud
-  //           })
-  //           .catch((err) => console.log(err));
-  //       }
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
-
-  //get fog
-  //if fog are >35 than picture is cloudy
-  // const getFog = () => {
-  //   axios
-  //     .get(`${urlWeather}${apiKey}`)
-  //     .then((response) => {
-  //       const fog = response.data.data[0].fog;
-  //       if (fog >= "35") {
-  //         axios
-  //           .get(`http://localhost:8080/images/fog.jpg`)
-  //           .then((response) => {
-  //             setBackground(response.data);
-  //           })
-  //           .catch((err) => console.log(err));
-  //       }
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
-
   //get mocktails
   const getMocktails = () => {
     axios
       .get(`http://localhost:8080/Mocktails`)
       .then((response) => {
-        if (temp < "5") {
-          setMocktails(response.data.weather.cold); //set to picture of cloud
-        } else if (temp < "15") {
-          setMocktails(response.data.weather.warm); //set to picture of cloud
-        } else {
-          setMocktails(response.data.weather.hot); //set to picture of cloud
-        }
+        response.data.map((e) => {
+          if (temp < 5) {
+            setMocktails(e.name); //set to picture of cloud
+            setMocktailsIng(e.method);
+          } else if (temp < 15) {
+            console.log(e);
+            setMocktails(e.name); //set to picture of cloud
+            setMocktailsIng(e.method);
+          } else {
+            setMocktails(e.name); //set to picture of cloud
+            setMocktailsIng(e.method);
+          }
+        });
       })
       .catch((err) => console.log(err));
   };
@@ -170,59 +120,63 @@ export default function UploadPage() {
    *Kayle's changes
    */
 
+  //--------------------------Kevin Part------------------------------------
 
+  const [pokemonData, setPokemonData] = useState(null);
 
-    //--------------------------Kevin Part------------------------------------
+  const [pokemonDetail, setPokemonDetail] = useState(null);
+  const [list, setList] = useState([]);
+  const weather = "sunny";
 
-    const [pokemonData, setPokemonData] = useState(null);
+  const findPokemonWithName = (pokemonName) => {
+    axios
+      .get(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`)
+      .then((response) => {
+        const pokemon = {
+          name: pokemonName,
+          url: response.data.sprites.front_default,
+        };
 
-    const [pokemonDetail, setPokemonDetail] = useState(null);
-    const [list, setList] = useState([]);
-    const weather = "sunny";
+        setList((prev) => [...prev, pokemon]);
+      })
+      .catch((error) => {
+        console.error(`Couldn't get a response from the API: ${error}`);
+      });
+  };
 
-    const findPokemonWithName = (pokemonName) => {
-        axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`).then(response => {
+  const getType = (type) => {
+    axios.get("https://pokeapi.co/api/v2/type/").then((response) => {
+      let type = response.data.results.find((e) => e.name === type);
+      console.log(type.url);
+      axios.get(`${type.url}`).then((response) => {
+        console.log(response.data);
+      });
+    });
+  };
 
-            const pokemon = {
-                name: pokemonName,
-                url: response.data.sprites.front_default
-            }
-
-            setList((prev) => [...prev, pokemon])
-
-        }).catch(error => {
-            console.error(`Couldn't get a response from the API: ${error}`);
+  useEffect(() => {
+    axios
+      .get("https://pokeapi.co/api/v2/pokemon/?limit=200")
+      .then((response) => {
+        setPokemonData(response.data.results);
+        response.data.results.forEach((element) => {
+          findPokemonWithName(element.name);
         });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
+
+  function shuffleArray(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
     }
-
-    const getType = (type) => {
-        axios.get("https://pokeapi.co/api/v2/type/")
-            .then((response) => {
-
-                let type = response.data.results.find((e) => e.name === type);
-                console.log(type.url);
-                axios.get(`${type.url}`)
-                    .then((response) => {
-                        console.log(response.data);
-                    });
-
-            });
-    }
-
-    useEffect(() => {
-        axios.get('https://pokeapi.co/api/v2/pokemon/?limit=200').then(response => {
-            setPokemonData(response.data.results);
-
-            response.data.results.forEach(element => {
-                findPokemonWithName(element.name)
-
-            });
-
-
-        }).catch(err => {
-            console.error(err);
-        });
-    }, []);
+    return array;
+  }
 
   return (
     <div
@@ -241,39 +195,30 @@ export default function UploadPage() {
         </div>
       </div>
       <p className="content">
-        It is ______(fill in with warm, hot, or cold). A great mocktail to share
-        today with your pokemon is....
+        A great mocktail to catch one of these pokemon....
+        <p className="pokemon__mocktail-info">{mocktail}</p>
       </p>
       <div className="pokemon__mocktail">
         <div className="pokemon__mocktail-wrapper">
-          <p className="pokemon__mocktail-info">{mocktail}</p>
-
+          {/* <p className="pokemon__mocktail-info">{mocktail}</p> */}
+          <p className="pokemon__mocktail-p">{mocktailIng}</p>
         </div>
       </div>
 
-       <div className='pokemon__image'>
-          <div className="marquee">
-              <div className="marquee-content">
-                  {list && shuffleArray(list).map((e, i) => {
-                      return (
-                          <div key={i} className="marquee-item">
-                              <img src={e.url} alt="pokemon image" />
-                          </div>)
-                  })}
-
-              </div>
+      <div className="pokemon__image">
+        <div className="marquee">
+          <div className="marquee-content">
+            {list &&
+              shuffleArray(list).map((e, i) => {
+                return (
+                  <div key={i} className="marquee-item">
+                    <img src={e.url} alt="pokemon image" />
+                  </div>
+                );
+              })}
           </div>
+        </div>
       </div>
+    </div>
   );
 }
-
-function shuffleArray(array) {
-    for (var i = array.length - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var temp = array[i];
-        array[i] = array[j];
-        array[j] = temp;
-    }
-    return array;
-}
-
