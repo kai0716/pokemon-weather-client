@@ -2,7 +2,6 @@
 import axios from "axios";
 import "./Home.scss";
 import { useEffect, useState } from "react";
-
 export default function UploadPage() {
   //useState for weather in main bar
   const [temp, setTemp] = useState("");
@@ -11,7 +10,6 @@ export default function UploadPage() {
   ); //hardcoded picture of the sun from database
   const [mocktail, setMocktails] = useState("");
   const [mocktailIng, setMocktailsIng] = useState("");
-
   //variables for key and url, can store this in another place in the future
   const urlWeather = `https://api.weatherbit.io/v2.0/current?lat=49.2850&lon=-123.1147`;
   // const urlWeather = `https://api.weatherbit.io/v2.0/current?lat=60.7197&lon=-135.0523`;
@@ -20,12 +18,10 @@ export default function UploadPage() {
   const lat = `60.7197`;
   const lon = `-135.0523`;
   const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiK}`;
-
   /*
    *************************************************************************
    *Kayle's changes
    */
-
   //get the temperature
   //put the temperature in the data spot
   const getTemp = () => {
@@ -38,7 +34,6 @@ export default function UploadPage() {
       })
       .catch((err) => console.log(err));
   };
-
   //default background it the sun picture
   //get precip
   //if precep is >=1 than rain picture
@@ -84,7 +79,6 @@ export default function UploadPage() {
       })
       .catch((err) => console.log(err));
   };
-
   //get mocktails
   const getMocktails = () => {
     axios
@@ -106,28 +100,21 @@ export default function UploadPage() {
       })
       .catch((err) => console.log(err));
   };
-
   //work on getting mocktail data once server is running
-
   useEffect(() => {
     getBackground();
     getTemp();
     getMocktails();
   }, []);
-
   /*
    *************************************************************************
    *Kayle's changes
    */
-
   //--------------------------Kevin Part------------------------------------
-
   const [pokemonData, setPokemonData] = useState(null);
-
   const [pokemonDetail, setPokemonDetail] = useState(null);
   const [list, setList] = useState([]);
   const weather = "sunny";
-
   const findPokemonWithName = (pokemonName) => {
     axios
       .get(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`)
@@ -136,14 +123,12 @@ export default function UploadPage() {
           name: pokemonName,
           url: response.data.sprites.front_default,
         };
-
         setList((prev) => [...prev, pokemon]);
       })
       .catch((error) => {
         console.error(`Couldn't get a response from the API: ${error}`);
       });
   };
-
   const getType = (type) => {
     axios.get("https://pokeapi.co/api/v2/type/").then((response) => {
       let type = response.data.results.find((e) => e.name === type);
@@ -153,7 +138,6 @@ export default function UploadPage() {
       });
     });
   };
-
   useEffect(() => {
     axios
       .get("https://pokeapi.co/api/v2/pokemon/?limit=200")
@@ -167,7 +151,6 @@ export default function UploadPage() {
         console.error(err);
       });
   }, []);
-
   function shuffleArray(array) {
     for (var i = array.length - 1; i > 0; i--) {
       var j = Math.floor(Math.random() * (i + 1));
@@ -177,7 +160,6 @@ export default function UploadPage() {
     }
     return array;
   }
-
   return (
     <div
       className="pokemon"
@@ -204,7 +186,6 @@ export default function UploadPage() {
           <p className="pokemon__mocktail-p">{mocktailIng}</p>
         </div>
       </div>
-
       <div className="pokemon__image">
         <div className="marquee">
           <div className="marquee-content">
