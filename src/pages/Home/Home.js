@@ -11,12 +11,16 @@ export default function UploadPage() {
   const [mocktail, setMocktails] = useState("");
   const [mocktailIng, setMocktailsIng] = useState("");
   //variables for key and url, can store this in another place in the future
-  const urlWeather = `https://api.weatherbit.io/v2.0/current?lat=49.2850&lon=-123.1147`;
-  // const urlWeather = `https://api.weatherbit.io/v2.0/current?lat=60.7197&lon=-135.0523`;
+  // const urlWeather = `https://api.weatherbit.io/v2.0/current?lat=49.2850&lon=-123.1147`;
+  const urlWeather = `https://api.weatherbit.io/v2.0/current?lat=53.3498&lon=-6.2603`;
   const apiKey = `&key=960a3e9c92ed4f7bb9cedd0bd9a99c03`;
   const apiK = `01f041aa5c5772c110be5f9ac7132843`;
   const lat = `60.7197`;
   const lon = `-135.0523`;
+  const latEdinburgh = `55.9533`;
+  const lonEdinburgh = `-3.1883`;
+  const latBella = `53.3498`;
+  const lonBella = `-6.2603`;
   const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiK}`;
   /*
    *************************************************************************
@@ -41,34 +45,32 @@ export default function UploadPage() {
     axios
       .get(`${urlWeather}${apiKey}`)
       .then((response) => {
-        console.log(response.data.data[0]);
         const precip = response.data.data[0].precip;
         const snow = response.data.data[0].snow;
         const cloud = response.data.data[0].clouds;
-        console.log(response.data.data[0].clouds);
         const fog = response.data.data[0].fog;
-        if (precip >= "1") {
+        if (precip >= 1) {
           axios
             .get(`http://localhost:8080/images/rain.jpg`)
             .then((response) => {
               setBackground(`http://localhost:8080/images/rain.jpg`); //set to picture of rain
             })
             .catch((err) => console.log(err));
-        } else if (snow >= "1") {
+        } else if (snow >= 1) {
           axios
             .get(`http://localhost:8080/images/snow.jpg`)
             .then((response) => {
               setBackground(`http://localhost:8080/images/snow.jpg`); //set to picture of snow
             })
             .catch((err) => console.log(err));
-        } else if (cloud >= 1) {
+        } else if (cloud > 50) {
           axios
             .get(`http://localhost:8080/images/clouds.jpg`)
             .then((response) => {
               setBackground(`http://localhost:8080/images/clouds.jpg`); //set to picture of cloud
             })
             .catch((err) => console.log(err));
-        } else if (fog >= "35") {
+        } else if (fog >= 35) {
           axios
             .get(`http://localhost:8080/images/fog.jpg`)
             .then((response) => {
@@ -85,16 +87,21 @@ export default function UploadPage() {
       .get(`http://localhost:8080/Mocktails`)
       .then((response) => {
         response.data.map((e) => {
-          if (temp < 5) {
-            setMocktails(e.name); //set to picture of cloud
-            setMocktailsIng(e.method);
-          } else if (temp < 15) {
-            console.log(e);
-            setMocktails(e.name); //set to picture of cloud
-            setMocktailsIng(e.method);
-          } else {
-            setMocktails(e.name); //set to picture of cloud
-            setMocktailsIng(e.method);
+          if (temp <= 5) {
+            if (e.weather === "cold") {
+              setMocktails(e.name); //set to picture of cloud
+              setMocktailsIng(e.method);
+            }
+          } else if (temp <= 15) {
+            if (e.weather === "warm") {
+              setMocktails(e.name); //set to picture of cloud
+              setMocktailsIng(e.method);
+            }
+          } else if (temp > 15) {
+            if (e.weather === "hot") {
+              setMocktails(e.name); //set to picture of cloud
+              setMocktailsIng(e.method);
+            }
           }
         });
       })
@@ -102,8 +109,8 @@ export default function UploadPage() {
   };
   //work on getting mocktail data once server is running
   useEffect(() => {
-    getBackground();
     getTemp();
+    getBackground();
     getMocktails();
   }, []);
   /*
