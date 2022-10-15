@@ -13,6 +13,8 @@ export default function UploadPage() {
     //variables for key and url, can store this in another place in the future
     // const urlWeather = `https://api.weatherbit.io/v2.0/current?lat=49.2850&lon=-123.1147`;
     const urlWeather = `https://api.weatherbit.io/v2.0/current?lat=53.3498&lon=-6.2603`;
+    //please register for an apikey from weatherbit and put it into an .env file 
+    //with variable called REACT_APP_APIKEY1 and REACT_APP_APIKEY2.
     const apiKey = `&key=${process.env.REACT_APP_APIKEY1}`;
     const apiK = `${process.env.REACT_APP_APIKEY2}`;
     const lat = `60.7197`;
