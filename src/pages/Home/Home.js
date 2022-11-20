@@ -2,6 +2,7 @@
 import axios from "axios";
 import "./Home.scss";
 import { useEffect, useState } from "react";
+
 export default function UploadPage() {
   //useState for weather in main bar
   const [temp, setTemp] = useState("");
@@ -11,8 +12,8 @@ export default function UploadPage() {
   const [mocktail, setMocktails] = useState("");
   const [mocktailIng, setMocktailsIng] = useState("");
   //variables for key and url, can store this in another place in the future
-  // const urlWeather = `https://api.weatherbit.io/v2.0/current?lat=49.2850&lon=-123.1147`;
-  const urlWeather = `https://api.weatherbit.io/v2.0/current?lat=53.3498&lon=-6.2603`;
+
+  //const urlWeather = `https://api.weatherbit.io/v2.0/current?lat=53.3498&lon=-6.2603`;
   const apiKey = `&key=960a3e9c92ed4f7bb9cedd0bd9a99c03`;
   const apiK = `01f041aa5c5772c110be5f9ac7132843`;
   const lat = `60.7197`;
@@ -21,7 +22,8 @@ export default function UploadPage() {
   const lonEdinburgh = `-3.1883`;
   const latBella = `53.3498`;
   const lonBella = `-6.2603`;
-  const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiK}`;
+  const urlWeather = `https://api.weatherbit.io/v2.0/current?lat=${lat}&lon=${lon}`;
+  // const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latEdinburgh}&lon=${lonEdinburgh}&appid=${apiK}`;
   /*
    *************************************************************************
    *Kayle's changes
@@ -183,13 +185,12 @@ export default function UploadPage() {
           <p className="pokemon__weather-info">{temp}ºC</p>
         </div>
       </div>
-      <p className="content">
-        A great mocktail to catch one of these pokemon....
+      <div className="content">
+        <p>A great mocktail to catch one of these pokemon....</p>
         <p className="pokemon__mocktail-info">{mocktail}</p>
-      </p>
+      </div>
       <div className="pokemon__mocktail">
         <div className="pokemon__mocktail-wrapper">
-          {/* <p className="pokemon__mocktail-info">{mocktail}</p> */}
           <p className="pokemon__mocktail-p">{mocktailIng}</p>
         </div>
       </div>
