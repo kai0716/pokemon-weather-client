@@ -9,33 +9,32 @@ export default function UploadPage() {
   const [background, setBackground] = useState(
     `http://localhost:8080/images/sun.jpg`
   ); //hardcoded picture of the sun from database
+
   const [mocktail, setMocktails] = useState("");
   const [mocktailIng, setMocktailsIng] = useState("");
-  //variables for key and url, can store this in another place in the future
 
-  //const urlWeather = `https://api.weatherbit.io/v2.0/current?lat=53.3498&lon=-6.2603`;
-  const apiKey = `&key=960a3e9c92ed4f7bb9cedd0bd9a99c03`;
-  const apiK = `01f041aa5c5772c110be5f9ac7132843`;
+  const [pokemonData, setPokemonData] = useState(null);
+  const [pokemonDetail, setPokemonDetail] = useState(null);
+  const [list, setList] = useState([]);
+  const weather = "sunny";
+
+  //variables for weather locations, API key, and the weatherbit url
+  const apiKey = `${process.env.REACT_APP_APIKEY}`;
   const lat = `60.7197`;
   const lon = `-135.0523`;
   const latEdinburgh = `55.9533`;
   const lonEdinburgh = `-3.1883`;
   const latBella = `53.3498`;
   const lonBella = `-6.2603`;
-  const urlWeather = `https://api.weatherbit.io/v2.0/current?lat=${lat}&lon=${lon}`;
-  // const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latEdinburgh}&lon=${lonEdinburgh}&appid=${apiK}`;
-  /*
-   *************************************************************************
-   *Kayle's changes
-   */
+  const urlWeather = `https://api.weatherbit.io/v2.0/current?lat=${latBella}&lon=${lonBella}&key=${apiKey}`;
+
   //get the temperature
   //put the temperature in the data spot
   const getTemp = () => {
     axios
-      .get(`${urlWeather}${apiKey}`)
+      .get(`${urlWeather}`)
       .then((response) => {
         const app_temp = response.data.data[0].app_temp;
-        // const app_temp = Math.round(app_tempK - 273.15);
         setTemp(app_temp);
       })
       .catch((err) => console.log(err));
@@ -45,7 +44,7 @@ export default function UploadPage() {
   //if precep is >=1 than rain picture
   const getBackground = () => {
     axios
-      .get(`${urlWeather}${apiKey}`)
+      .get(`${urlWeather}`)
       .then((response) => {
         const precip = response.data.data[0].precip;
         const snow = response.data.data[0].snow;
@@ -83,6 +82,7 @@ export default function UploadPage() {
       })
       .catch((err) => console.log(err));
   };
+
   //get mocktails
   const getMocktails = () => {
     axios
@@ -109,21 +109,14 @@ export default function UploadPage() {
       })
       .catch((err) => console.log(err));
   };
+
   //work on getting mocktail data once server is running
   useEffect(() => {
     getTemp();
     getBackground();
     getMocktails();
   }, []);
-  /*
-   *************************************************************************
-   *Kayle's changes
-   */
-  //--------------------------Kevin Part------------------------------------
-  const [pokemonData, setPokemonData] = useState(null);
-  const [pokemonDetail, setPokemonDetail] = useState(null);
-  const [list, setList] = useState([]);
-  const weather = "sunny";
+
   const findPokemonWithName = (pokemonName) => {
     axios
       .get(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`)
@@ -138,15 +131,18 @@ export default function UploadPage() {
         console.error(`Couldn't get a response from the API: ${error}`);
       });
   };
-  const getType = (type) => {
-    axios.get("https://pokeapi.co/api/v2/type/").then((response) => {
-      let type = response.data.results.find((e) => e.name === type);
-      console.log(type.url);
-      axios.get(`${type.url}`).then((response) => {
-        console.log(response.data);
-      });
-    });
-  };
+
+  //function created for getting type of pokemon but didn't have time to fully implement
+  // const getType = (type) => {
+  //   axios.get("https://pokeapi.co/api/v2/type/").then((response) => {
+  //     let type = response.data.results.find((e) => e.name === type);
+  //     console.log(type.url);
+  //     axios.get(`${type.url}`).then((response) => {
+  //       console.log(response.data);
+  //     });
+  //   });
+  // };
+
   useEffect(() => {
     axios
       .get("https://pokeapi.co/api/v2/pokemon/?limit=200")
@@ -160,6 +156,7 @@ export default function UploadPage() {
         console.error(err);
       });
   }, []);
+
   function shuffleArray(array) {
     for (var i = array.length - 1; i > 0; i--) {
       var j = Math.floor(Math.random() * (i + 1));
@@ -169,6 +166,7 @@ export default function UploadPage() {
     }
     return array;
   }
+
   return (
     <div
       className="pokemon"
