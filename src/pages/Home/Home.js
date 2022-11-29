@@ -9,33 +9,52 @@ export default function UploadPage() {
   const [background, setBackground] = useState(
     `http://localhost:8080/images/sun.jpg`
   ); //hardcoded picture of the sun from database
+  const [city, setCity] = useState("Vancouver");
 
   const [mocktail, setMocktails] = useState("");
   const [mocktailIng, setMocktailsIng] = useState("");
 
-  const [pokemonData, setPokemonData] = useState(null);
-  const [pokemonDetail, setPokemonDetail] = useState(null);
+  const [_pokemonData, setPokemonData] = useState(null);
+  // const [pokemonDetail, setPokemonDetail] = useState(null);
   const [list, setList] = useState([]);
-  const weather = "sunny";
+  // const weather = "sunny";
+
+  //current location and default is Vancouver,BC
+  const [currentLocation, setCurrentLocation] = useState({
+    lat: 49.28507657283974,
+    lng: -123.11461581337777,
+  });
+
+  //Geolocation for user
+  const getGeoLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        let userLat = position.coords.latitude;
+        let userLng = position.coords.longitude;
+        setCurrentLocation({ lat: userLat, lng: userLng });
+      });
+    } else {
+      //alert!
+      alert(`Geolocation is not supported by your browser.`);
+    }
+  };
 
   //variables for weather locations, API key, and the weatherbit url
   const apiKey = `${process.env.REACT_APP_APIKEY}`;
-  const lat = `60.7197`;
-  const lon = `-135.0523`;
-  const latEdinburgh = `55.9533`;
-  const lonEdinburgh = `-3.1883`;
-  const latBella = `53.3498`;
-  const lonBella = `-6.2603`;
-  const urlWeather = `https://api.weatherbit.io/v2.0/current?lat=${latBella}&lon=${lonBella}&key=${apiKey}`;
+  const urlWeather = `https://api.weatherbit.io/v2.0/current?lat=${currentLocation.lat}&lon=${currentLocation.lng}&key=${apiKey}`;
 
   //get the temperature
   //put the temperature in the data spot
   const getTemp = () => {
+    getGeoLocation();
     axios
       .get(`${urlWeather}`)
       .then((response) => {
         const app_temp = response.data.data[0].app_temp;
+        const city = response.data.data[0].city_name;
         setTemp(app_temp);
+        setCity(city);
+        console.log(response.data.data[0]);
       })
       .catch((err) => console.log(err));
   };
@@ -43,6 +62,7 @@ export default function UploadPage() {
   //get precip
   //if precep is >=1 than rain picture
   const getBackground = () => {
+    getGeoLocation();
     axios
       .get(`${urlWeather}`)
       .then((response) => {
@@ -181,6 +201,7 @@ export default function UploadPage() {
       <div className="pokemon__weather">
         <div className="pokemon__weather-wrapper">
           <p className="pokemon__weather-info">{temp}ºC</p>
+          <p className="pokemon__weather-info--city">{city}</p>
         </div>
       </div>
       <div className="content">

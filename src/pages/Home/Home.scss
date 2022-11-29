@@ -1,4 +1,5 @@
 .pokemon {
+  margin-top: 2rem;
   &__weather {
     &-wrapper {
       background-color: rgba(red, 0.2);
@@ -16,6 +17,14 @@
       left: 50%;
       transform: translate(-50%, -120%);
       color: white;
+      &--city{
+        position: absolute;
+        top: 5;
+        font-size: 1rem;
+        left: 25%;
+        color: white;
+        
+      }
     }
   }
 
