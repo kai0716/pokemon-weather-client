@@ -73,29 +73,107 @@ export default function UploadPage() {
         if (precip >= 1) {
           axios
             .get(`http://localhost:8080/images/rain.jpg`)
+
             .then((response) => {
-              setBackground(`http://localhost:8080/images/rain.jpg`); //set to picture of rain
+                const app_temp = response.data.data[0].app_temp;
+                // const app_temp = Math.round(app_tempK - 273.15);
+                setTemp(app_temp);
             })
             .catch((err) => console.log(err));
-        } else if (snow >= 1) {
-          axios
-            .get(`http://localhost:8080/images/snow.jpg`)
+    };
+    //default background it the sun picture
+    //get precip
+    //if precep is >=1 than rain picture
+    const getBackground = () => {
+        axios
+            .get(`${urlWeather}${apiKey}`)
             .then((response) => {
-              setBackground(`http://localhost:8080/images/snow.jpg`); //set to picture of snow
+                const precip = response.data.data[0].precip;
+                const snow = response.data.data[0].snow;
+                const cloud = response.data.data[0].clouds;
+                const fog = response.data.data[0].fog;
+                if (precip >= 1) {
+                    axios
+                        .get(`http://localhost:8080/images/rain.jpg`)
+                        .then((response) => {
+                            setBackground(`http://localhost:8080/images/rain.jpg`); //set to picture of rain
+                        })
+                        .catch((err) => console.log(err));
+                } else if (snow >= 1) {
+                    axios
+                        .get(`http://localhost:8080/images/snow.jpg`)
+                        .then((response) => {
+                            setBackground(`http://localhost:8080/images/snow.jpg`); //set to picture of snow
+                        })
+                        .catch((err) => console.log(err));
+                } else if (cloud > 50) {
+                    axios
+                        .get(`http://localhost:8080/images/clouds.jpg`)
+                        .then((response) => {
+                            setBackground(`http://localhost:8080/images/clouds.jpg`); //set to picture of cloud
+                        })
+                        .catch((err) => console.log(err));
+                } else if (fog >= 35) {
+                    axios
+                        .get(`http://localhost:8080/images/fog.jpg`)
+                        .then((response) => {
+                            setBackground(`http://localhost:8080/images/fog.jpg`);
+                        })
+                        .catch((err) => console.log(err));
+                }
             })
             .catch((err) => console.log(err));
-        } else if (cloud > 50) {
-          axios
-            .get(`http://localhost:8080/images/clouds.jpg`)
+    };
+    //get mocktails
+    const getMocktails = () => {
+        axios
+            .get(`http://localhost:8080/Mocktails`)
             .then((response) => {
-              setBackground(`http://localhost:8080/images/clouds.jpg`); //set to picture of cloud
+                response.data.map((e) => {
+                    if (temp <= 5) {
+                        if (e.weather === "cold") {
+                            setMocktails(e.name); //set to picture of cloud
+                            setMocktailsIng(e.method);
+                        }
+                    } else if (temp <= 15) {
+                        if (e.weather === "warm") {
+                            setMocktails(e.name); //set to picture of cloud
+                            setMocktailsIng(e.method);
+                        }
+                    } else if (temp > 15) {
+                        if (e.weather === "hot") {
+                            setMocktails(e.name); //set to picture of cloud
+                            setMocktailsIng(e.method);
+                        }
+                    }
+                });
             })
             .catch((err) => console.log(err));
-        } else if (fog >= 35) {
-          axios
-            .get(`http://localhost:8080/images/fog.jpg`)
+    };
+    //work on getting mocktail data once server is running
+    useEffect(() => {
+        getTemp();
+        getBackground();
+        getMocktails();
+    }, []);
+    /*
+     *************************************************************************
+     *Kayle's changes
+     */
+    //--------------------------Kevin Part------------------------------------
+    const [pokemonData, setPokemonData] = useState(null);
+    const [pokemonDetail, setPokemonDetail] = useState(null);
+    const [list, setList] = useState([]);
+    const weather = "sunny";
+    const findPokemonWithName = (pokemonName) => {
+        axios
+            .get(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`)
             .then((response) => {
-              setBackground(`http://localhost:8080/images/fog.jpg`);
+                const pokemon = {
+                    name: pokemonName,
+                    url: response.data.sprites.front_default,
+                };
+                setList((prev) => [...prev, pokemon]);
             })
             .catch((err) => console.log(err));
         }
@@ -225,8 +303,7 @@ export default function UploadPage() {
                 );
               })}
           </div>
+
         </div>
-      </div>
-    </div>
-  );
+    );
 }
